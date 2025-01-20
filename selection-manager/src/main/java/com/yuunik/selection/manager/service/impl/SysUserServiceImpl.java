@@ -7,6 +7,7 @@ import com.yuunik.selection.manager.mapper.SysUserMapper;
 import com.yuunik.selection.manager.service.SysUserService;
 import com.yuunik.selection.model.dto.system.LoginDto;
 import com.yuunik.selection.model.entity.system.SysUser;
+import com.yuunik.selection.model.vo.common.ResultCodeEnum;
 import com.yuunik.selection.model.vo.system.LoginVo;
 import com.yuunik.selection.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +35,17 @@ public class SysUserServiceImpl implements SysUserService {
         // 获取用户信息
         String userName = loginDto.getUserName();
         // 查询用户是否存在
-        SysUser sysUser = sysUserMapper.selectUserInfoByUserName(userName);
-        if (!userName.equals(sysUser.getUserName())) {
-            throw new YuunikException(ResultCode.FAIL, "用户不存在");
+        SysUser user = sysUserMapper.selectUserInfoByUserName(userName);
+        if (user == null) {
+            throw new YuunikException(ResultCodeEnum.USER_NOT_EXISTS);
         }
         // 校验密码
-        String password = sysUser.getPassword();
+        String password = user.getPassword();
         if (!DigestUtils.md5DigestAsHex(loginDto.getPassword().getBytes()).equals(password)) {
-            throw new YuunikException(ResultCode.FAIL, "密码不正确");
+            throw new YuunikException(ResultCodeEnum.LOGIN_ERROR);
         }
         // 生成 token 信息
-        String token = "Bear " + JwtUtil.getJwtToken(sysUser.getId(), sysUser.getUserName());
+        String token = "Bear " + JwtUtil.getJwtToken(user.getId(), user.getUserName());
         // 存放 token
         redisTemplate.opsForValue().set("user:login", JSON.toJSONString(token), 7, TimeUnit.DAYS);
         // 封装响应信息

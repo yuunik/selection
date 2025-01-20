@@ -8,6 +8,7 @@ public enum ResultCodeEnum {
     SUCCESS(200 , "操作成功") ,
     LOGIN_ERROR(201 , "用户名或者密码错误"),
     VALIDATECODE_ERROR(202 , "验证码错误") ,
+    USER_NOT_EXISTS(203 , "用户不存在"),
     LOGIN_AUTH(208 , "用户未登录"),
     USER_NAME_IS_EXISTS(209 , "用户名已经存在"),
     SYSTEM_ERROR(9999 , "您的网络有问题请稍后重试"),
