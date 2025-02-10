@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 public class ValidateCodeServiceImpl implements ValidateCodeService {
     @Autowired
@@ -26,7 +28,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         // 生成存入 redis 的key 值
         String key = UUID.randomUUID().toString().replace("-", "");
         // 存入 redis
-        redisTemplate.opsForValue().set("user:validate" + key, code);
+        redisTemplate.opsForValue().set("user:validate" + key, code, 5, TimeUnit.MINUTES);
         // 生成响应数据
         ValidateCodeVo validateCodeVo = new ValidateCodeVo();
         // 设置验证码key

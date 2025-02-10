@@ -1,5 +1,6 @@
 package com.yuunik.selection.manager.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.yuunik.selection.common.constant.ResultCode;
 import com.yuunik.selection.common.exception.YuunikException;
@@ -32,6 +33,23 @@ public class SysUserServiceImpl implements SysUserService {
      */
     @Override
     public LoginVo login(LoginDto loginDto) {
+        // 获取验证码key
+        String codeKey = loginDto.getCodeKey();
+        // 获取验证码
+        String captcha = loginDto.getCaptcha();
+        // 有验证码时, 校验验证码
+        if (!StrUtil.isEmpty(codeKey) && !StrUtil.isEmpty(captcha)) {
+            // 从 redis 取出验证码
+            String redisCode = redisTemplate.opsForValue().get("user:validate" + codeKey);
+            // 非空校验
+            if (!StrUtil.isEmpty(redisCode) && StrUtil.equalsIgnoreCase(redisCode, captcha)) {
+                // 验证码输入正确, 删除redis中的验证码
+                redisTemplate.delete("user:validate" + codeKey);
+            } else {
+                // 验证码输入错误
+                throw new YuunikException(ResultCodeEnum.VALIDATECODE_ERROR);
+            }
+        }
         // 获取用户信息
         String userName = loginDto.getUserName();
         // 查询用户是否存在
