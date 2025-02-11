@@ -3,6 +3,7 @@ package com.yuunik.selection.manager.controller;
 import com.yuunik.selection.manager.service.SysUserService;
 import com.yuunik.selection.manager.service.ValidateCodeService;
 import com.yuunik.selection.model.dto.system.LoginDto;
+import com.yuunik.selection.model.entity.system.SysUser;
 import com.yuunik.selection.model.vo.common.Result;
 import com.yuunik.selection.model.vo.common.ResultCodeEnum;
 import com.yuunik.selection.model.vo.system.LoginVo;
@@ -34,5 +35,21 @@ public class IndexController {
     public Result<ValidateCodeVo> getValidateCode() {
         ValidateCodeVo validateCodeVo = validateCodeService.getValidateCode();
         return Result.build(validateCodeVo, ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "获取用户信息")
+    @GetMapping("/getUserInfo")
+    public Result<SysUser> getUserInfo(@RequestHeader("Authorization") String authorization) {
+        String token = authorization.substring("Bearer ".length());
+        SysUser user = sysUserService.getUserInfo(token);
+        return Result.build(user, ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "用户安全退出")
+    @GetMapping("/logout")
+    public Result logout(@RequestHeader("Authorization") String authorization) {
+        String token = authorization.substring("Bearer ".length());
+        sysUserService.logout(token);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
     }
 }

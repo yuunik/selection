@@ -2,7 +2,6 @@ package com.yuunik.selection.manager.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
-import com.yuunik.selection.common.constant.ResultCode;
 import com.yuunik.selection.common.exception.YuunikException;
 import com.yuunik.selection.manager.mapper.SysUserMapper;
 import com.yuunik.selection.manager.service.SysUserService;
@@ -29,7 +28,6 @@ public class SysUserServiceImpl implements SysUserService {
     /**
      * 用户登录
      * @param loginDto 登录成功响应结果实体类
-     * @return
      */
     @Override
     public LoginVo login(LoginDto loginDto) {
@@ -63,12 +61,27 @@ public class SysUserServiceImpl implements SysUserService {
             throw new YuunikException(ResultCodeEnum.LOGIN_ERROR);
         }
         // 生成 token 信息
-        String token = "Bear " + JwtUtil.getJwtToken(user.getId(), user.getUserName());
+        String token = JwtUtil.getJwtToken(user.getId(), user.getUserName());
         // 存放 token
-        redisTemplate.opsForValue().set("user:login", JSON.toJSONString(token), 7, TimeUnit.DAYS);
+        redisTemplate.opsForValue().set("user:login" + token, JSON.toJSONString(user), 7, TimeUnit.DAYS);
         // 封装响应信息
         LoginVo loginVo = new LoginVo();
         loginVo.setToken(token);
         return loginVo;
+    }
+
+    // 获取用户信息
+    @Override
+    public SysUser getUserInfo(String token) {
+        // 获取用户信息
+        String userJsonStr = redisTemplate.opsForValue().get("user:login" + token);
+        // 转换为用户实例
+        return JSON.parseObject(userJsonStr, SysUser.class);
+    }
+
+    // 用户安全退出
+    @Override
+    public void logout(String token) {
+        redisTemplate.delete("user:login" + token);
     }
 }
