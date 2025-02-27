@@ -3,14 +3,28 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.5.12:3306/db_spzx?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://192.168.71.11:3306/db_spzx?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
     username: root
     password: 1234
     type: com.zaxxer.hikari.HikariDataSource
   data:
     redis:
-      host: 192.168.5.12
+      host: 192.168.71.11
       port: 6379
 mybatis:
   mapper-locations: classpath:/mapper/*/*.xml
   config-location: classpath:/mybatis-config.xml
+
+selection:
+  auth:
+    noAuthUrls:
+      # 登录接口不拦截
+      - /admin/system/index/login
+      # 退出登录接口不拦截
+      - /admin/system/index/logout
+      # 获取验证码接口不拦截
+      - /admin/system/index/getValidateCode
+      # swagger 文档不拦截
+      - /doc.html
+      - /webjars/**
+      - /v3/**

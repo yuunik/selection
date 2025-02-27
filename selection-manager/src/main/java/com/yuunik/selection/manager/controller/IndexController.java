@@ -8,6 +8,7 @@ import com.yuunik.selection.model.vo.common.Result;
 import com.yuunik.selection.model.vo.common.ResultCodeEnum;
 import com.yuunik.selection.model.vo.system.LoginVo;
 import com.yuunik.selection.model.vo.system.ValidateCodeVo;
+import com.yuunik.selection.util.AuthContextUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +40,14 @@ public class IndexController {
 
     @Operation(summary = "获取用户信息")
     @GetMapping("/getUserInfo")
-    public Result<SysUser> getUserInfo(@RequestHeader("Authorization") String authorization) {
-        String token = authorization.substring("Bearer ".length());
-        SysUser user = sysUserService.getUserInfo(token);
-        return Result.build(user, ResultCodeEnum.SUCCESS);
+    public Result<SysUser> getUserInfo() {
+        // 从thread local中获取用户信息
+        return Result.build(AuthContextUtil.get(), ResultCodeEnum.SUCCESS);
     }
 
     @Operation(summary = "用户安全退出")
     @GetMapping("/logout")
-    public Result logout(@RequestHeader("Authorization") String authorization) {
+    public Result<Object> logout(@RequestHeader("Authorization") String authorization) {
         String token = authorization.substring("Bearer ".length());
         sysUserService.logout(token);
         return Result.build(null, ResultCodeEnum.SUCCESS);
