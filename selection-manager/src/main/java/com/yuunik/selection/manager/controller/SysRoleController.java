@@ -26,4 +26,25 @@ public class SysRoleController {
         PageInfo<SysRole> pageInfo = sysRoleService.pageRoleList(current, limit, sysRoleDto);
         return Result.build(pageInfo, ResultCodeEnum.SUCCESS);
     }
+
+    @Operation(summary = "添加用户角色")
+    @PostMapping("/addRole")
+    public Result<Object> addRole(@RequestBody SysRole sysRole) {
+        sysRoleService.addRole(sysRole);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "删除用户角色")
+    @DeleteMapping("/deleteRole/{id}")
+    public Result<Object> deleteRole(@PathVariable Integer id) {
+        sysRoleService.deleteRole(id);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "修改用户角色")
+    @PutMapping("/updateRole")
+    public Result<Object> updateRole(@RequestBody SysRole sysRole) {
+        sysRoleService.updateRole(sysRole);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
 }

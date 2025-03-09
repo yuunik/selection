@@ -1,6 +1,5 @@
 package com.yuunik.selection.manager.mapper;
 
-import com.github.pagehelper.PageInfo;
 import com.yuunik.selection.model.entity.system.SysRole;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,4 +9,13 @@ import java.util.List;
 public interface SysRoleMapper {
     // 分页查询角色信息
     List<SysRole> selectRoleList(String roleName);
+
+    // 添加角色信息
+    void addRole(SysRole sysRole);
+
+    // 删除角色信息
+    void deleteRole(Integer id);
+
+    // 修改角色信息
+    void updateRole(SysRole sysRole);
 }

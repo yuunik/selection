@@ -28,4 +28,22 @@ public class SysRoleServiceImpl implements SysRoleService {
         // 根据响应信息, 封装数据
         return new PageInfo<>(sysRoleList);
     }
+
+    // 添加角色
+    @Override
+    public void addRole(SysRole sysRole) {
+        sysRoleMapper.addRole(sysRole);
+    }
+
+    // 删除角色
+    @Override
+    public void deleteRole(Integer id) {
+        sysRoleMapper.deleteRole(id);
+    }
+
+    // 修改角色信息
+    @Override
+    public void updateRole(SysRole sysRole) {
+        sysRoleMapper.updateRole(sysRole);
+    }
 }
