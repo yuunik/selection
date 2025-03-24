@@ -107,10 +107,13 @@ public class SysUserServiceImpl implements SysUserService {
         SysUser user = sysUserMapper.selectUserInfoByUserName(sysUser.getUserName());
         // 用户名唯一校验
         if (user != null) {
+            // 用户名已存在
             throw new YuunikException(ResultCodeEnum.USER_NAME_IS_EXISTS);
         }
         // 密码加密
         sysUser.setPassword(DigestUtils.md5DigestAsHex(sysUser.getPassword().getBytes()));
+        // 用户账户状态(正常状态为 1 , 且默认为 1)
+        sysUser.setStatus(1);
         // 调用接口, 添加用户
         sysUserMapper.insertUser(sysUser);
     }
