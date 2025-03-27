@@ -14,10 +14,11 @@ public enum ResultCodeEnum {
     LOGIN_AUTH(208 , "用户未登录"),
     USER_NAME_IS_EXISTS(209 , "用户名已经存在"),
     SYSTEM_ERROR(9999 , "您的网络有问题请稍后重试"),
-    NODE_ERROR( 217, "该节点下有子节点，不可以删除"),
     ACCOUNT_STOP( 216, "账号已停用"),
-
+    NODE_ERROR( 217, "该节点下有子节点，不可以删除"),
+    SQL_ERROR( 218, "sql执行错误"),
     STOCK_LESS( 219, "库存不足"),
+    FILE_UPLOAD_ERROR( 220, "文件上传失败"),
 
     ;
 

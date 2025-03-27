@@ -94,25 +94,27 @@
     <update id="updateUser" parameterType="com.yuunik.selection.model.entity.system.SysUser">
         update
             sys_user
-        set
+        <set>
+
             <if test="userName != null and userName != ''">
-                username = #{userName}
+                username = #{userName},
             </if>
             <if test="password != null and password != ''">
-                password = #{password}
+                password = #{password},
             </if>
             <if test="name != null and name != ''">
-                name = #{name}
+                name = #{name},
             </if>
             <if test="phone != null and phone != ''">
-                phone = #{phone}
+                phone = #{phone},
             </if>
             <if test="avatar != null and avatar != ''">
-                avatar = #{avatar}
+                avatar = #{avatar},
             </if>
             <if test="description != null and description != ''">
-                description = #{description}
+                description = #{description},
             </if>
+        </set>
         where
             id = #{id}
     </update>

@@ -1,16 +1,24 @@
 server:
   port: 8501
+  tomcat:
+    max-http-form-post-size: 10MB
+    max-swallow-size: 10MB
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.71.11:3306/db_spzx?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://192.168.5.18:3306/db_spzx?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
     username: root
     password: 1234
     type: com.zaxxer.hikari.HikariDataSource
   data:
     redis:
-      host: 192.168.71.11
+      host: 192.168.5.18
       port: 6379
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 mybatis:
   mapper-locations: classpath:/mapper/*/*.xml
   config-location: classpath:/mybatis-config.xml
@@ -28,3 +36,9 @@ selection:
       - /doc.html
       - /webjars/**
       - /v3/**
+
+  minio:
+    endpoint: http://192.168.5.18:9001
+    accessKey: admin
+    secretKey: admin123456
+    bucketName: avatar-bucket
