@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Tag(name = "用户角色接口")
@@ -52,7 +51,7 @@ public class SysRoleController {
     }
 
     @Operation(summary = "查询所有角色及用户所拥有的角色信息")
-    @PostMapping("/getRoleList/{userId}")
+    @GetMapping("/getUserRoleList/{userId}")
     public Result<Map<String, Object>> getRoleList(@PathVariable Long userId) {
         Map<String, Object> roleInfo = sysRoleService.getRoleList(userId);
         return Result.build(roleInfo, ResultCodeEnum.SUCCESS);

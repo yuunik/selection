@@ -2,7 +2,7 @@ package com.yuunik.selection.manager.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.yuunik.selection.manager.service.SysUserService;
-import com.yuunik.selection.model.dto.system.AssginRoleDto;
+import com.yuunik.selection.model.dto.system.AssignRoleDto;
 import com.yuunik.selection.model.dto.system.SysUserDto;
 import com.yuunik.selection.model.entity.system.SysUser;
 import com.yuunik.selection.model.vo.common.Result;
@@ -49,9 +49,9 @@ public class SysUserController {
     }
 
     @Operation(summary = "为用户分配角色")
-    @PutMapping("/doAssign")
-    public Result<Object> doAssign(@RequestBody AssginRoleDto assginRoleDto) {
-        sysUserService.doAssign(assginRoleDto);
+    @PostMapping("/doAssign")
+    public Result<Object> doAssign(@RequestBody AssignRoleDto assignRoleDto) {
+        sysUserService.doAssign(assignRoleDto);
         return Result.build(null, ResultCodeEnum.SUCCESS);
     }
 }

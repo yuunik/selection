@@ -1,9 +1,7 @@
 package com.yuunik.selection.manager.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson2.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -11,7 +9,7 @@ import com.yuunik.selection.common.exception.YuunikException;
 import com.yuunik.selection.manager.mapper.SysUserMapper;
 import com.yuunik.selection.manager.mapper.SysUserRoleMapper;
 import com.yuunik.selection.manager.service.SysUserService;
-import com.yuunik.selection.model.dto.system.AssginRoleDto;
+import com.yuunik.selection.model.dto.system.AssignRoleDto;
 import com.yuunik.selection.model.dto.system.LoginDto;
 import com.yuunik.selection.model.dto.system.SysUserDto;
 import com.yuunik.selection.model.entity.system.SysUser;
@@ -140,11 +138,11 @@ public class SysUserServiceImpl implements SysUserService {
 
     // 为用户分配角色
     @Override
-    public void doAssign(AssginRoleDto assginRoleDto) {
+    public void doAssign(AssignRoleDto assignRoleDto) {
         // 获取用户 id
-        Long userId = assginRoleDto.getUserId();
+        Long userId = assignRoleDto.getUserId();
         // 获取用户欲具有的角色id
-        List<Long> newRoleIdList = assginRoleDto.getRoleIdList();
+        List<Long> newRoleIdList = assignRoleDto.getRoleIdList();
         // 获取用户先具有的角色id
         List<Long> curRoleIdList = sysUserRoleMapper.selectAllUserRoleIds(userId);
         // 获取用户想要具有的角色id 与 用户已有的角色id 的差集,  即需要删除的角色idList
