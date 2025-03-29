@@ -1,6 +1,7 @@
 package com.yuunik.selection.manager.service;
 
 import com.github.pagehelper.PageInfo;
+import com.yuunik.selection.model.dto.system.AssginRoleDto;
 import com.yuunik.selection.model.dto.system.LoginDto;
 import com.yuunik.selection.model.dto.system.SysUserDto;
 import com.yuunik.selection.model.entity.system.SysUser;
@@ -20,4 +21,6 @@ public interface SysUserService {
     void deleteUser(Integer id);
 
     void updateUser(SysUser sysUser);
+
+    void doAssign(AssginRoleDto assginRoleDto);
 }

@@ -1,5 +1,7 @@
 package com.yuunik.selection.manager.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson2.JSON;
@@ -7,7 +9,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yuunik.selection.common.exception.YuunikException;
 import com.yuunik.selection.manager.mapper.SysUserMapper;
+import com.yuunik.selection.manager.mapper.SysUserRoleMapper;
 import com.yuunik.selection.manager.service.SysUserService;
+import com.yuunik.selection.model.dto.system.AssginRoleDto;
 import com.yuunik.selection.model.dto.system.LoginDto;
 import com.yuunik.selection.model.dto.system.SysUserDto;
 import com.yuunik.selection.model.entity.system.SysUser;
@@ -29,6 +33,8 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private SysUserRoleMapper sysUserRoleMapper;
 
     /**
      * 用户登录
@@ -125,9 +131,36 @@ public class SysUserServiceImpl implements SysUserService {
         sysUserMapper.deleteUser(id);
     }
 
+    // 修改用户
     @Override
     public void updateUser(SysUser sysUser) {
         // 调用接口, 修改用户信息
         sysUserMapper.updateUser(sysUser);
+    }
+
+    // 为用户分配角色
+    @Override
+    public void doAssign(AssginRoleDto assginRoleDto) {
+        // 获取用户 id
+        Long userId = assginRoleDto.getUserId();
+        // 获取用户欲具有的角色id
+        List<Long> newRoleIdList = assginRoleDto.getRoleIdList();
+        // 获取用户先具有的角色id
+        List<Long> curRoleIdList = sysUserRoleMapper.selectAllUserRoleIds(userId);
+        // 获取用户想要具有的角色id 与 用户已有的角色id 的差集,  即需要删除的角色idList
+        List<Long> listToDelete = CollUtil.subtractToList(curRoleIdList, newRoleIdList);
+        // 获取用户想要具有的角色id 与 用户已有的角色id 的交集, 即需要添加的角色idList
+        List<Long> listToAdd = CollUtil.subtractToList(newRoleIdList, curRoleIdList);
+        // 非空判断
+        if (CollUtil.isNotEmpty(listToDelete)) {
+            // 有需要删除的角色id, 则删除用户角色信息
+            sysUserRoleMapper.deleteUserRoleByUserId(userId);
+        }
+        if (CollUtil.isNotEmpty(listToAdd)) {
+            for (Long addRoleId : listToAdd) {
+                // 有需要添加的角色id, 添加用户角色信息
+                sysUserRoleMapper.insertUserRole(userId, addRoleId);
+            }
+        }
     }
 }

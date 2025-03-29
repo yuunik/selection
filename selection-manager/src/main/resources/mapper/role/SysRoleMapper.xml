@@ -33,22 +33,41 @@
         order by id desc
     </select>
 
+    <!-- 获取所有角色信息 -->
+    <select id="selectAllRoles" resultMap="sysRoleMap">
+        select
+            <include refid="columns"></include>
+        from
+            sys_role
+        where
+            is_deleted = 0
+    </select>
+
     <!-- 添加用户信息 -->
     <insert id="addRole" parameterType="com.yuunik.selection.model.entity.system.SysRole">
         insert into sys_role (
           role_name,
           role_code,
-          description
+          description,
+          create_time,
+          update_time
         ) values (
           #{roleName},
           #{roleCode},
-          #{description}
+          #{description},
+          now(),
+          now()
         )
     </insert>
 
     <!-- 删除用户信息 -->
     <update id="deleteRole">
-        update sys_role set is_deleted = 1 where id = #{id}
+        update
+            sys_role
+        set
+            is_deleted = 1,
+            update_time = now()
+        where id = #{id}
     </update>
 
     <!-- 修改用户信息 -->
@@ -58,7 +77,8 @@
         set
             role_name = #{roleName},
             role_code = #{roleCode},
-            description = #{description}
+            description = #{description},
+            update_time = now()
         where
             id = #{id}
     </update>

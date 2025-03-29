@@ -14,8 +14,11 @@ public interface SysRoleMapper {
     void addRole(SysRole sysRole);
 
     // 删除角色信息
-    void deleteRole(Integer id);
+    void deleteRole(Long id);
 
     // 修改角色信息
     void updateRole(SysRole sysRole);
+
+    // 查询所有角色信息
+    List<SysRole> selectAllRoles();
 }

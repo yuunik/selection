@@ -59,24 +59,28 @@
 
     <!-- 新增用户信息 -->
     <insert id="insertUser" parameterType="com.yuunik.selection.model.entity.system.SysUser">
-        insert into sys_user (
-              id,
+        insert into
+            sys_user (
               userName,
               password,
               name,
               phone,
               avatar,
               description,
-              status
-        ) values (
-              #{id},
+              status,
+              create_time,
+              update_time
+            )
+        values (
               #{userName},
               #{password},
               #{name},
               #{phone},
               #{avatar},
               #{description},
-              #{status}
+              #{status},
+              now(),
+              now()
         )
     </insert>
 
@@ -85,7 +89,8 @@
         update
             sys_user
         set
-            is_deleted = 1
+            is_deleted = 1,
+            update_time = now()
         where
             id = #{id}
     </update>
@@ -94,8 +99,7 @@
     <update id="updateUser" parameterType="com.yuunik.selection.model.entity.system.SysUser">
         update
             sys_user
-        <set>
-
+        set
             <if test="userName != null and userName != ''">
                 username = #{userName},
             </if>
@@ -114,7 +118,7 @@
             <if test="description != null and description != ''">
                 description = #{description},
             </if>
-        </set>
+                update_time = now()
         where
             id = #{id}
     </update>

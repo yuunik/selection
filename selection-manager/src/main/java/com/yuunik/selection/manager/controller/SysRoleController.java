@@ -11,6 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @Tag(name = "用户角色接口")
 @RestController
 @RequestMapping("/admin/system/role")
@@ -36,7 +39,7 @@ public class SysRoleController {
 
     @Operation(summary = "删除用户角色")
     @DeleteMapping("/deleteRole/{id}")
-    public Result<Object> deleteRole(@PathVariable Integer id) {
+    public Result<Object> deleteRole(@PathVariable Long id) {
         sysRoleService.deleteRole(id);
         return Result.build(null, ResultCodeEnum.SUCCESS);
     }
@@ -47,4 +50,12 @@ public class SysRoleController {
         sysRoleService.updateRole(sysRole);
         return Result.build(null, ResultCodeEnum.SUCCESS);
     }
+
+    @Operation(summary = "查询所有角色及用户所拥有的角色信息")
+    @PostMapping("/getRoleList/{userId}")
+    public Result<Map<String, Object>> getRoleList(@PathVariable Long userId) {
+        Map<String, Object> roleInfo = sysRoleService.getRoleList(userId);
+        return Result.build(roleInfo, ResultCodeEnum.SUCCESS);
+    }
+
 }
