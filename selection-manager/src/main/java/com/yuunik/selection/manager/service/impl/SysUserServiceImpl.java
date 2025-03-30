@@ -19,6 +19,7 @@ import com.yuunik.selection.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.util.List;
@@ -138,6 +139,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     // 为用户分配角色
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void doAssign(AssignRoleDto assignRoleDto) {
         // 获取用户 id
         Long userId = assignRoleDto.getUserId();
