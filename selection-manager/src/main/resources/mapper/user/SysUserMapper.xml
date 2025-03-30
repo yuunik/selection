@@ -31,7 +31,6 @@
             <if test="createTimeEnd != null and createTimeEnd != ''">
                 and create_time &lt;= #{createTimeEnd}
             </if>
-            and is_deleted = 0
         </where>
     </sql>
 
@@ -87,6 +86,7 @@
         update
             sys_user
         set
+            status = 0,
             is_deleted = 1,
             update_time = now()
         where
