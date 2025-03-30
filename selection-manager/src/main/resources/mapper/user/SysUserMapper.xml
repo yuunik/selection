@@ -43,8 +43,6 @@
             sys_user
         where
             username = #{username}
-        and
-            is_deleted = 0
     </select>
 
     <!-- 分页查询用户信息 -->
