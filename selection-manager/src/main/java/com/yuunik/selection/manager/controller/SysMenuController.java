@@ -7,9 +7,7 @@ import com.yuunik.selection.model.vo.common.ResultCodeEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,6 +23,27 @@ public class SysMenuController {
     public Result<List<SysMenu>> getMenuList() {
         List<SysMenu> menuList = sysMenuService.getMenuList();
         return Result.build(menuList, ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "新增菜单")
+    @PostMapping("/addMenu")
+    public Result<Object> addMenu(@RequestBody SysMenu sysMenu) {
+        sysMenuService.addMenu(sysMenu);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "删除菜单")
+    @DeleteMapping("/deleteMenu/{id}")
+    public Result<Object> deleteMenu(@PathVariable Long id) {
+        sysMenuService.deleteMenu(id);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "修改菜单")
+    @PutMapping("/updateMenu")
+    public Result<Object> updateMenu(@RequestBody SysMenu sysMenu) {
+        sysMenuService.updateMenu(sysMenu);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
     }
 
 }
