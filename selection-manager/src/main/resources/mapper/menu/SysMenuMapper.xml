@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yuunik.selection.manager.mapper.SysMenuMapper">
+    <resultMap id="sysMenuMap" type="com.yuunik.selection.model.entity.system.SysMenu" autoMapping="true" />
+    <!-- columns -->
+    <sql id="columns">
+        id,
+        parent_id parentId,
+        title,
+        component,
+        sort_value sortValue,
+        status,
+        create_time createTime,
+        update_time updateTime,
+        is_deleted isDeleted
+    </sql>
 
+    <!-- 查询所有的权限 -->
+    <select id="selectAllMenu" resultMap="sysMenuMap">
+        select
+            <include refid="columns"></include>
+        from
+            sys_menu
+        where
+            is_deleted = 0
+    </select>
 </mapper>
