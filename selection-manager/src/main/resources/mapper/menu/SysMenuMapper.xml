@@ -21,7 +21,71 @@
             <include refid="columns"></include>
         from
             sys_menu
+    </select>
+
+    <!-- 新增权限 -->
+    <insert id="insertMenu" useGeneratedKeys="true" keyProperty="id">
+        insert into
+            sys_menu(
+                parent_id,
+                title,
+                component,
+                sort_value,
+                status,
+            )
+        values (
+                #{parentId},
+                #{title},
+                #{component},
+                #{sortValue},
+                #{status},
+        )
+    </insert>
+
+    <!-- 删除权限 -->
+    <update id="updateMenu">
+        update
+            sys_menu
+        set
+            status = 0,
+            is_deleted = 1
         where
+            id = #{id}
+    </update>
+
+    <!-- 修改权限 -->
+    <update id="updateIsMenuDeletedById">
+        update
+            sys_menu
+        set
+            <if test="parentId != null and parentId != ''">
+                parent_id = #{parentId},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="component != null and component != ''">
+                component = #{component},
+            </if>
+            <if test="sortValue != null and sortValue != ''">
+                sort_value = #{sortValue},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status}
+            </if>
+        where
+            id = #{id}
+    </update>
+
+    <!-- 根据id查询所拥有的权限数量 -->
+    <select id="countMenuById" resultType="Integer">
+        select
+            count(*)
+        from
+            sys_menu
+        where
+            parent_id = #{id}
+        and
             is_deleted = 0
     </select>
 </mapper>

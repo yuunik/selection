@@ -9,4 +9,16 @@ import java.util.List;
 public interface SysMenuMapper {
     // 获取所有权限
     List<SysMenu> selectAllMenu();
+
+    // 删除权限
+    void updateIsMenuDeletedById(Long id);
+
+    // 新增权限
+    void insertMenu(SysMenu sysMenu);
+
+    // 修改权限
+    void updateMenu(SysMenu sysMenu);
+
+    // 根据id查询所拥有的权限数量
+    int countMenuById(Long id);
 }
