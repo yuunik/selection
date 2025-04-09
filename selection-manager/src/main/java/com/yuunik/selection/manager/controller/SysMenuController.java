@@ -45,5 +45,4 @@ public class SysMenuController {
         sysMenuService.updateMenu(sysMenu);
         return Result.build(null, ResultCodeEnum.SUCCESS);
     }
-
 }
