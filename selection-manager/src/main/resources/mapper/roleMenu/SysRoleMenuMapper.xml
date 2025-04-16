@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuunik.selection.manager.mapper.SysRoleMenuMapper">
+    <!-- 根据用户id查询用户所具有的菜单权限id -->
+    <select id="getRoleMenuIdList" resultType="long">
+        select
+            menu_id
+        from
+            sys_role_menu
+        where
+            role_id = #{roleId}
+        and
+            is_deleted = 0
+        and
+            is_half = 0
+    </select>
+
+    <!-- 根据角色id删除角色所具有的菜单权限 -->
+    <update id="deleteRoleMenuByRoleId">
+        update
+            sys_role_menu
+        set
+            is_deleted = 1
+        where
+            role_id = #{roleId}
+    </update>
+
+    <!-- 为角色分配菜单权限 -->
+    <insert id="assignRoleMenu">
+        insert into
+            sys_role_menu (
+                role_id,
+                menu_id,
+                is_half
+            )
+        values
+            <foreach collection="menuIdList" item="menu" separator=",">
+                (
+                 #{roleId},
+                 #{menu.id},
+                 #{menu.isHalf}
+                )
+            </foreach>
+    </insert>
+</mapper>
