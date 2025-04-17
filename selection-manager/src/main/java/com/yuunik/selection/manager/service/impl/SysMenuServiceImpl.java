@@ -1,15 +1,20 @@
 package com.yuunik.selection.manager.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.yuunik.selection.common.exception.YuunikException;
 import com.yuunik.selection.manager.mapper.SysMenuMapper;
 import com.yuunik.selection.manager.service.SysMenuService;
 import com.yuunik.selection.manager.utils.MenuHelper;
 import com.yuunik.selection.model.entity.system.SysMenu;
+import com.yuunik.selection.model.entity.system.SysUser;
 import com.yuunik.selection.model.vo.common.ResultCodeEnum;
+import com.yuunik.selection.model.vo.system.SysMenuVo;
+import com.yuunik.selection.util.AuthContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,5 +58,36 @@ public class SysMenuServiceImpl implements SysMenuService {
     @Override
     public void updateMenu(SysMenu sysMenu) {
         sysMenuMapper.updateMenu(sysMenu);
+    }
+
+    // 获取用户所具有的菜单权限
+    @Override
+    public List<SysMenuVo> getMenuOfUser() {
+        // 获取当前的用户信息
+        SysUser sysUser = AuthContextUtil.get();
+        // 获取用户id
+        Long userId = sysUser.getId();
+        // 调用接口, 获取用户所具有的菜单权限
+        List<SysMenu> sysMenuList = sysMenuMapper.selectMenuOfUser(userId);
+        // List<SySMenuVo> ===> List<SysMenu>
+        List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(sysMenuList);
+        return sysMenuVoList;
+    }
+
+    // 构建SysMenuVo列表
+    public List<SysMenuVo> bulidSysMenuVoList(List<SysMenu> sysMenuList) {
+        List<SysMenuVo> sysMenuVoList = new ArrayList<>();
+        SysMenuVo sysMenuVo = null;
+        // 遍历sysMenuList, 将其转换为SysMenuVo
+        for (SysMenu sysMenu : sysMenuList) {
+            sysMenuVo = new SysMenuVo();
+            sysMenuVo.setTitle(sysMenu.getTitle());
+            sysMenuVo.setName(sysMenu.getComponent());
+            if (CollUtil.isNotEmpty(sysMenu.getChildren())) {
+                sysMenuVo.setChildren(bulidSysMenuVoList(sysMenu.getChildren()));
+            }
+            sysMenuVoList.add(sysMenuVo);
+        }
+        return sysMenuVoList;
     }
 }

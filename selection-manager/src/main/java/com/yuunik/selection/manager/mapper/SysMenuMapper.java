@@ -21,4 +21,7 @@ public interface SysMenuMapper {
 
     // 根据id查询所拥有的权限数量
     int countMenuById(Long id);
+
+    // 根据用户id查询所拥有的权限
+    List<SysMenu> selectMenuOfUser(Long userId);
 }

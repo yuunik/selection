@@ -1,8 +1,10 @@
 package com.yuunik.selection.manager.service;
 
 import com.yuunik.selection.model.entity.system.SysMenu;
+import com.yuunik.selection.model.vo.system.SysMenuVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SysMenuService {
     List<SysMenu> getMenuList();
@@ -12,4 +14,6 @@ public interface SysMenuService {
     void deleteMenu(Long id);
 
     void updateMenu(SysMenu sysMenu);
+
+    List<SysMenuVo> getMenuOfUser();
 }
