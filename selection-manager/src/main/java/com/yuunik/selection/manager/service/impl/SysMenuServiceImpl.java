@@ -2,6 +2,7 @@ package com.yuunik.selection.manager.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.yuunik.selection.common.exception.YuunikException;
 import com.yuunik.selection.manager.mapper.SysMenuMapper;
 import com.yuunik.selection.manager.service.SysMenuService;
@@ -71,7 +72,7 @@ public class SysMenuServiceImpl implements SysMenuService {
         Long userId = sysUser.getId();
         // 调用接口, 获取用户所具有的菜单权限
         List<SysMenu> sysMenuList = sysMenuMapper.selectMenuOfUser(userId);
-        // 获取 route 字符串数组
+        // 获取路由权限数组
         List<String> routeList = new ArrayList<>();
         for (SysMenu sysMenu : sysMenuList) {
             routeList.add(sysMenu.getComponent());
@@ -79,17 +80,20 @@ public class SysMenuServiceImpl implements SysMenuService {
         // 构建SysMenuVo树形列表
         List<SysMenu> sysMenuTreeList = MenuHelper.buildTree(sysMenuList);
         // List<SySMenuVo> ===> List<SysMenu>
-        List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(sysMenuTreeList);
+        List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(sysMenuTreeList, 1);
+        // 获取按钮权限数组
+        List<String> buttonList = buildButtonList(sysMenuVoList);
 
         // 根据返回数据, 封装返回数据
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("sysMenuList", sysMenuVoList);
         resultMap.put("routeList", routeList);
+        resultMap.put("buttonList", buttonList);
         return resultMap;
     }
 
     // 构建SysMenuVo列表
-    public List<SysMenuVo> bulidSysMenuVoList(List<SysMenu> sysMenuList) {
+    public List<SysMenuVo> bulidSysMenuVoList(List<SysMenu> sysMenuList, Integer currLevel) {
         List<SysMenuVo> sysMenuVoList = new ArrayList<>();
         SysMenuVo sysMenuVo = null;
         // 遍历sysMenuList, 将其转换为SysMenuVo
@@ -97,11 +101,28 @@ public class SysMenuServiceImpl implements SysMenuService {
             sysMenuVo = new SysMenuVo();
             sysMenuVo.setTitle(sysMenu.getTitle());
             sysMenuVo.setName(sysMenu.getComponent());
+            sysMenuVo.setLevel(currLevel);
             if (CollUtil.isNotEmpty(sysMenu.getChildren())) {
-                sysMenuVo.setChildren(bulidSysMenuVoList(sysMenu.getChildren()));
+                sysMenuVo.setChildren(bulidSysMenuVoList(sysMenu.getChildren(), currLevel + 1));
+            } else {
+                sysMenuVo.setChildren(List.of());
             }
             sysMenuVoList.add(sysMenuVo);
         }
         return sysMenuVoList;
+    }
+
+    // 获取功能权限列表
+    public List<String> buildButtonList(List<SysMenuVo> sysMenuVoList) {
+        List<String> buttonList = new ArrayList<>();
+        for (SysMenuVo sysMenuVo : sysMenuVoList) {
+            if (sysMenuVo.getLevel().equals(3)) {
+                buttonList.add(sysMenuVo.getName());
+            }
+            if (CollUtil.isNotEmpty(sysMenuVo.getChildren())) {
+                buttonList.addAll(buildButtonList(sysMenuVo.getChildren()));
+            }
+        }
+        return buttonList;
     }
 }

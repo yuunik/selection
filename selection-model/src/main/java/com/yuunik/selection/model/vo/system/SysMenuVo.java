@@ -15,6 +15,9 @@ public class SysMenuVo {
     @Schema(description = "系统菜单名称")
     private String name;
 
+    @Schema(description = "层级关系")
+    private Integer level;
+
     @Schema(description = "系统菜单子菜单列表")
     private List<SysMenuVo> children;
 
