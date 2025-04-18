@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SysMenuServiceImpl implements SysMenuService {
@@ -62,16 +64,28 @@ public class SysMenuServiceImpl implements SysMenuService {
 
     // 获取用户所具有的菜单权限
     @Override
-    public List<SysMenuVo> getMenuOfUser() {
+    public Map<String, Object> getMenuOfUser() {
         // 获取当前的用户信息
         SysUser sysUser = AuthContextUtil.get();
         // 获取用户id
         Long userId = sysUser.getId();
         // 调用接口, 获取用户所具有的菜单权限
         List<SysMenu> sysMenuList = sysMenuMapper.selectMenuOfUser(userId);
+        // 获取 route 字符串数组
+        List<String> routeList = new ArrayList<>();
+        for (SysMenu sysMenu : sysMenuList) {
+            routeList.add(sysMenu.getComponent());
+        }
+        // 构建SysMenuVo树形列表
+        List<SysMenu> sysMenuTreeList = MenuHelper.buildTree(sysMenuList);
         // List<SySMenuVo> ===> List<SysMenu>
-        List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(sysMenuList);
-        return sysMenuVoList;
+        List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(sysMenuTreeList);
+
+        // 根据返回数据, 封装返回数据
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("sysMenuList", sysMenuVoList);
+        resultMap.put("routeList", routeList);
+        return resultMap;
     }
 
     // 构建SysMenuVo列表

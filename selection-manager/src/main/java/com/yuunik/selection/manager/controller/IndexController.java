@@ -64,8 +64,8 @@ public class IndexController {
 
     @Operation(summary = "获取用户所具有的菜单权限")
     @GetMapping("/getMenuOfUser")
-    public Result<List<SysMenuVo>> getMenuOfUser() {
-        List<SysMenuVo> sysMenuVoList = sysMenuService.getMenuOfUser();
-        return Result.build(sysMenuVoList, ResultCodeEnum.SUCCESS);
+    public Result<Map<String, Object>> getMenuOfUser() {
+        Map<String, Object> menuMap = sysMenuService.getMenuOfUser();
+        return Result.build(menuMap, ResultCodeEnum.SUCCESS);
     }
 }

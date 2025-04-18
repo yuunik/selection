@@ -15,5 +15,5 @@ public interface SysMenuService {
 
     void updateMenu(SysMenu sysMenu);
 
-    List<SysMenuVo> getMenuOfUser();
+    Map<String, Object> getMenuOfUser();
 }
