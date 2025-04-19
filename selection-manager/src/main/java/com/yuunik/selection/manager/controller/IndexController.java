@@ -8,7 +8,6 @@ import com.yuunik.selection.model.entity.system.SysUser;
 import com.yuunik.selection.model.vo.common.Result;
 import com.yuunik.selection.model.vo.common.ResultCodeEnum;
 import com.yuunik.selection.model.vo.system.LoginVo;
-import com.yuunik.selection.model.vo.system.SysMenuVo;
 import com.yuunik.selection.model.vo.system.ValidateCodeVo;
 import com.yuunik.selection.util.AuthContextUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Tag(name = "用户登录接口")
