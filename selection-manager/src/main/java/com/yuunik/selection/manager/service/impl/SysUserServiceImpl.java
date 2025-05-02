@@ -32,6 +32,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
 
@@ -61,13 +62,13 @@ public class SysUserServiceImpl implements SysUserService {
         // 获取用户信息
         String userName = loginDto.getUserName();
         // 查询用户是否存在
-        SysUser user = sysUserMapper.selectUserInfoByUserName(userName);
+        SysUser user = sysUserMapper.selectUserInfoByUserName(userName.trim());
         if (user == null) {
             throw new YuunikException(ResultCodeEnum.USER_NOT_EXISTS);
         }
         // 校验密码
         String password = user.getPassword();
-        if (!DigestUtils.md5DigestAsHex(loginDto.getPassword().getBytes()).equals(password)) {
+        if (!DigestUtils.md5DigestAsHex(loginDto.getPassword().getBytes()).equals(password.trim())) {
             throw new YuunikException(ResultCodeEnum.LOGIN_ERROR);
         }
         // 生成 token 信息
