@@ -7,13 +7,13 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.5.21:3306/db_spzx?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://www.selection.com:3306/db_spzx?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
     username: root
     password: 1234
     type: com.zaxxer.hikari.HikariDataSource
   data:
     redis:
-      host: 192.168.5.21
+      host: www.selection.com
       port: 6379
   servlet:
     multipart:
@@ -38,7 +38,7 @@ selection:
       - /v3/**
 
   minio:
-    endpoint: http://192.168.5.21:9001
+    endpoint: http://www.selection.com:9001
     accessKey: admin
     secretKey: admin123456
     bucketName: avatar-bucket

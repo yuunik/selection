@@ -21,6 +21,8 @@
             <include refid="columns"></include>
         from
             sys_menu
+        order by
+            create_time desc
     </select>
 
     <!-- 新增权限 -->
