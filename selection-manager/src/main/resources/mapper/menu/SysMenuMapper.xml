@@ -21,6 +21,8 @@
             <include refid="columns"></include>
         from
             sys_menu
+        where
+            is_deleted = 0
         order by
             create_time desc
     </select>
