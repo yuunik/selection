@@ -1,19 +1,16 @@
 package com.yuunik.selection.manager.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import com.yuunik.selection.common.exception.YuunikException;
-import com.yuunik.selection.manager.mapper.SysMenuMapper;
 import com.yuunik.selection.manager.mapper.SysRoleMenuMapper;
 import com.yuunik.selection.manager.service.SysMenuService;
 import com.yuunik.selection.manager.service.SysRoleMenuService;
 import com.yuunik.selection.model.dto.system.AssginMenuDto;
-import com.yuunik.selection.model.entity.system.SysMenu;
 import com.yuunik.selection.model.vo.common.ResultCodeEnum;
+import com.yuunik.selection.model.vo.system.SysMenuVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +28,7 @@ public class SysRoleMenuServiceImpl implements SysRoleMenuService {
     @Override
     public Map<String, Object> getMenuByRoleId(Long roleId) {
         // 获取所有菜单
-        List<SysMenu> sysMenuList = sysMenuService.getMenuList();
+        List<SysMenuVo> sysMenuList = sysMenuService.getMenuList();
         // 获取用户所具有的菜单权限
         List<Long> roleMenuIdList = sysRoleMenuMapper.getRoleMenuIdList(roleId);
         // 根据响应参数, 封装数据

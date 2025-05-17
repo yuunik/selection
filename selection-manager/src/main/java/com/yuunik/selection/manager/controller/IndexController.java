@@ -4,12 +4,10 @@ import com.yuunik.selection.manager.service.SysMenuService;
 import com.yuunik.selection.manager.service.SysUserService;
 import com.yuunik.selection.manager.service.ValidateCodeService;
 import com.yuunik.selection.model.dto.system.LoginDto;
-import com.yuunik.selection.model.entity.system.SysUser;
 import com.yuunik.selection.model.vo.common.Result;
 import com.yuunik.selection.model.vo.common.ResultCodeEnum;
 import com.yuunik.selection.model.vo.system.LoginVo;
 import com.yuunik.selection.model.vo.system.ValidateCodeVo;
-import com.yuunik.selection.util.AuthContextUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +44,11 @@ public class IndexController {
 
     @Operation(summary = "获取用户信息")
     @GetMapping("/getUserInfo")
-    public Result<SysUser> getUserInfo() {
+    public Result<Map<String, Object>> getUserInfo() {
         // 从thread local中获取用户信息
-        return Result.build(AuthContextUtil.get(), ResultCodeEnum.SUCCESS);
+        Map<String, Object> resultMap = sysMenuService.getMenuOfUser();
+        // 删除
+        return Result.build(resultMap, ResultCodeEnum.SUCCESS);
     }
 
     @Operation(summary = "用户安全退出")

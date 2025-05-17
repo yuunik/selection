@@ -82,4 +82,20 @@
         where
             id = #{id}
     </update>
+
+    <!-- 获取用户所具有的角色信息列表 -->
+    <select id="selectRoleListOfUser" resultMap="sysRoleMap">
+        select
+            sr.*
+        from
+            sys_role sr
+        join
+            sys_user_role sur
+        on
+            sr.id = sur.role_id
+        where
+            sur.user_id = #{userId}
+        and
+            sr.is_deleted = 0
+    </select>
 </mapper>

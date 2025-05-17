@@ -21,4 +21,7 @@ public interface SysRoleMapper {
 
     // 查询所有角色信息
     List<SysRole> selectAllRoles();
+
+    // 获取用户所具有的角色信息列表
+    List<SysRole> selectRoleListOfUser(Long userId);
 }

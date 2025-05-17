@@ -1,13 +1,13 @@
 package com.yuunik.selection.manager.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
 import com.yuunik.selection.common.exception.YuunikException;
 import com.yuunik.selection.manager.mapper.SysMenuMapper;
+import com.yuunik.selection.manager.mapper.SysRoleMapper;
 import com.yuunik.selection.manager.service.SysMenuService;
 import com.yuunik.selection.manager.utils.MenuHelper;
 import com.yuunik.selection.model.entity.system.SysMenu;
+import com.yuunik.selection.model.entity.system.SysRole;
 import com.yuunik.selection.model.entity.system.SysUser;
 import com.yuunik.selection.model.vo.common.ResultCodeEnum;
 import com.yuunik.selection.model.vo.system.SysMenuVo;
@@ -26,9 +26,12 @@ public class SysMenuServiceImpl implements SysMenuService {
     @Autowired
     private SysMenuMapper sysMenuMapper;
 
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
+
     // 获取菜单列表
     @Override
-    public List<SysMenu> getMenuList() {
+    public List<SysMenuVo> getMenuList() {
         // 调用接口, 获取所有权限
         List<SysMenu> sysMenuList = sysMenuMapper.selectAllMenu();
         if (CollUtil.isEmpty(sysMenuList)) {
@@ -36,7 +39,9 @@ public class SysMenuServiceImpl implements SysMenuService {
             return List.of();
         }
         // 获取权限列表
-        return MenuHelper.buildTree(sysMenuList);
+        List<SysMenu> treeSysMenuList = MenuHelper.buildTree(sysMenuList);
+        List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(treeSysMenuList, 1);
+        return sysMenuVoList;
     }
 
     // 添改菜单
@@ -79,16 +84,23 @@ public class SysMenuServiceImpl implements SysMenuService {
         }
         // 构建SysMenuVo树形列表
         List<SysMenu> sysMenuTreeList = MenuHelper.buildTree(sysMenuList);
-        // List<SySMenuVo> ===> List<SysMenu>
+        // List<SysMenu> ===> List<SySMenuVo>
         List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(sysMenuTreeList, 1);
         // 获取按钮权限数组
         List<String> buttonList = buildButtonList(sysMenuVoList);
-
+        // 获取用户所具有的角色列表
+        List<SysRole> sysRoleList = sysRoleMapper.selectRoleListOfUser(userId);
+        // 获取用户所具有的角色名称列表
+        List<String> roleList = new ArrayList<>();
+        for (SysRole sysRole : sysRoleList) {
+            roleList.add(sysRole.getRoleName());
+        }
         // 根据返回数据, 封装返回数据
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("sysMenuList", sysMenuVoList);
         resultMap.put("routeList", routeList);
         resultMap.put("buttonList", buttonList);
+        resultMap.put("roleList", roleList);
+        resultMap.put("userInfo", sysUser);
         return resultMap;
     }
 
@@ -112,7 +124,7 @@ public class SysMenuServiceImpl implements SysMenuService {
         return sysMenuVoList;
     }
 
-    // 获取功能权限列表
+    // 获取按钮权限列表
     public List<String> buildButtonList(List<SysMenuVo> sysMenuVoList) {
         List<String> buttonList = new ArrayList<>();
         for (SysMenuVo sysMenuVo : sysMenuVoList) {
@@ -124,5 +136,29 @@ public class SysMenuServiceImpl implements SysMenuService {
             }
         }
         return buttonList;
+    }
+
+    // 获取个人相关信息
+    public Map<String, Object> getPersonalInfo(List<SysMenu> sysMenuList) {
+        // 获取用户所具有的路由权限列表
+        List<String> routeList = new ArrayList<>();
+        for (SysMenu sysMenu : sysMenuList) {
+            // 获取每个路由
+            routeList.add(sysMenu.getComponent());
+        }
+        // sysMenuList ===> sysMenuVoList
+        List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(sysMenuList, 1);
+        // 获取用户所具有的按钮权限列表
+        List<String> buttonList = buildButtonList(sysMenuVoList);
+        // 获取用户所具有的角色列表
+        List<SysRole> sysRoleList = sysRoleMapper.selectAllRoles();
+        // 获取用户信息
+        SysUser sysUser = AuthContextUtil.get();
+        // 封装返回数据
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("routeList", routeList);
+        resultMap.put("buttonList", buttonList);
+        resultMap.put("userInfo", sysUser);
+        return resultMap;
     }
 }

@@ -4,6 +4,7 @@ import com.yuunik.selection.manager.service.SysMenuService;
 import com.yuunik.selection.model.entity.system.SysMenu;
 import com.yuunik.selection.model.vo.common.Result;
 import com.yuunik.selection.model.vo.common.ResultCodeEnum;
+import com.yuunik.selection.model.vo.system.SysMenuVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class SysMenuController {
 
     @Operation(summary = "获取权限列表")
     @GetMapping("/getMenuList")
-    public Result<List<SysMenu>> getMenuList() {
-        List<SysMenu> menuList = sysMenuService.getMenuList();
+    public Result<List<SysMenuVo>> getMenuList() {
+        List<SysMenuVo> menuList = sysMenuService.getMenuList();
         return Result.build(menuList, ResultCodeEnum.SUCCESS);
     }
 

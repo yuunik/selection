@@ -61,7 +61,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     public Map<String, Object> getRoleList(Long userId) {
         // 查询所有角色信息
         List<SysRole> sysRoleList = sysRoleMapper.selectAllRoles();
-        // 查询用户所拥有的角色信息
+        // 查询用户所拥有的角色id列表
         List<Long> userRoleIdList = sysUserRoleMapper.selectAllUserRoleIds(userId);
         // 封装数据
         Map<String, Object> result = new HashMap<>();

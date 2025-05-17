@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.yuunik.selection.model.dto.system.SysRoleDto;
 import com.yuunik.selection.model.entity.system.SysRole;
 
+import java.util.List;
 import java.util.Map;
 
 public interface SysRoleService {

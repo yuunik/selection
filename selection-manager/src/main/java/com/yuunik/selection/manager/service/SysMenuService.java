@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface SysMenuService {
-    List<SysMenu> getMenuList();
+    List<SysMenuVo> getMenuList();
 
     void addMenu(SysMenu sysMenu);
 
