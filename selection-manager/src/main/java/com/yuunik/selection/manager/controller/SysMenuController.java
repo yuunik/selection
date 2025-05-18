@@ -21,8 +21,8 @@ public class SysMenuController {
 
     @Operation(summary = "获取权限列表")
     @GetMapping("/getMenuList")
-    public Result<List<SysMenuVo>> getMenuList() {
-        List<SysMenuVo> menuList = sysMenuService.getMenuList();
+    public Result<List<SysMenu>> getMenuList() {
+        List<SysMenu> menuList = sysMenuService.getMenuList();
         return Result.build(menuList, ResultCodeEnum.SUCCESS);
     }
 

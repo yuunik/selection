@@ -1,5 +1,6 @@
 package com.yuunik.selection.manager.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.yuunik.selection.common.exception.YuunikException;
 import com.yuunik.selection.manager.mapper.SysMenuMapper;
@@ -31,7 +32,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 
     // 获取菜单列表
     @Override
-    public List<SysMenuVo> getMenuList() {
+    public List<SysMenu> getMenuList() {
         // 调用接口, 获取所有权限
         List<SysMenu> sysMenuList = sysMenuMapper.selectAllMenu();
         if (CollUtil.isEmpty(sysMenuList)) {
@@ -40,8 +41,8 @@ public class SysMenuServiceImpl implements SysMenuService {
         }
         // 获取权限列表
         List<SysMenu> treeSysMenuList = MenuHelper.buildTree(sysMenuList);
-        List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(treeSysMenuList, 1);
-        return sysMenuVoList;
+        List<SysMenu> resultList = bulidDataList(treeSysMenuList, 1, SysMenu.class);
+        return resultList;
     }
 
     // 添改菜单
@@ -85,7 +86,7 @@ public class SysMenuServiceImpl implements SysMenuService {
         // 构建SysMenuVo树形列表
         List<SysMenu> sysMenuTreeList = MenuHelper.buildTree(sysMenuList);
         // List<SysMenu> ===> List<SySMenuVo>
-        List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(sysMenuTreeList, 1);
+        List<SysMenuVo> sysMenuVoList = bulidDataList(sysMenuTreeList, 1, SysMenuVo.class);
         // 获取按钮权限数组
         List<String> buttonList = buildButtonList(sysMenuVoList);
         // 获取用户所具有的角色列表
@@ -104,24 +105,40 @@ public class SysMenuServiceImpl implements SysMenuService {
         return resultMap;
     }
 
-    // 构建SysMenuVo列表
-    public List<SysMenuVo> bulidSysMenuVoList(List<SysMenu> sysMenuList, Integer currLevel) {
-        List<SysMenuVo> sysMenuVoList = new ArrayList<>();
+    // 构建T列表 T 为 SysMenu 或 SysMenuVo
+    public <T> List<T> bulidDataList(List<SysMenu> sysMenuList, Integer currLevel, Class<T> targetClass) {
+        List<T> dataList = new ArrayList<>();
         SysMenuVo sysMenuVo = null;
+        SysMenu sysMenuCp = null;
         // 遍历sysMenuList, 将其转换为SysMenuVo
         for (SysMenu sysMenu : sysMenuList) {
-            sysMenuVo = new SysMenuVo();
-            sysMenuVo.setTitle(sysMenu.getTitle());
-            sysMenuVo.setName(sysMenu.getComponent());
-            sysMenuVo.setLevel(currLevel);
-            if (CollUtil.isNotEmpty(sysMenu.getChildren())) {
-                sysMenuVo.setChildren(bulidSysMenuVoList(sysMenu.getChildren(), currLevel + 1));
-            } else {
-                sysMenuVo.setChildren(List.of());
+            if (targetClass.equals(SysMenuVo.class)) {
+                sysMenuVo = new SysMenuVo();
+                sysMenuVo.setTitle(sysMenu.getTitle());
+                sysMenuVo.setName(sysMenu.getComponent());
+                sysMenuVo.setLevel(currLevel);
+
+                if (CollUtil.isNotEmpty(sysMenu.getChildren())) {
+                    sysMenuVo.setChildren(bulidDataList(sysMenu.getChildren(), currLevel + 1, SysMenuVo.class));
+                } else {
+                    sysMenuVo.setChildren(List.of());
+                }
+                dataList.add(targetClass.cast(sysMenuVo));
+            } else if (targetClass.equals(SysMenu.class)) {
+                sysMenuCp = new SysMenu();
+                BeanUtil.copyProperties(sysMenu, sysMenuCp);
+                // 单独设置 level
+                sysMenuCp.setLevel(currLevel);
+
+                if (CollUtil.isNotEmpty((sysMenu.getChildren()))) {
+                    sysMenuCp.setChildren(bulidDataList(sysMenu.getChildren(), currLevel + 1, SysMenu.class));
+                } else {
+                    sysMenuCp.setChildren(List.of());
+                }
+                dataList.add(targetClass.cast(sysMenuCp));
             }
-            sysMenuVoList.add(sysMenuVo);
         }
-        return sysMenuVoList;
+        return dataList;
     }
 
     // 获取按钮权限列表
@@ -147,7 +164,7 @@ public class SysMenuServiceImpl implements SysMenuService {
             routeList.add(sysMenu.getComponent());
         }
         // sysMenuList ===> sysMenuVoList
-        List<SysMenuVo> sysMenuVoList = bulidSysMenuVoList(sysMenuList, 1);
+        List<SysMenuVo> sysMenuVoList = bulidDataList(sysMenuList, 1, SysMenuVo.class);
         // 获取用户所具有的按钮权限列表
         List<String> buttonList = buildButtonList(sysMenuVoList);
         // 获取用户所具有的角色列表
