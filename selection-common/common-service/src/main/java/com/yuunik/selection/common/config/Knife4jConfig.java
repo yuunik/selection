@@ -7,6 +7,9 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * 接口文档配置类, 访问地址为: localhost:8501/doc.html
+ */
 @Configuration
 public class Knife4jConfig {
     @Bean

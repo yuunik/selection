@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuunik.selection.manager.mapper.SysCategoryMapper">
+    <resultMap id="sysCategoryMap" type="com.yuunik.selection.model.entity.product.Category" autoMapping="true" />
+    <!-- columns -->
+    <sql id="columns">
+        id,
+        name,
+        image_url imageUrl,
+        parent_id parentId,
+        status,
+        order_num orderNum,
+        create_time createTime,
+        update_time updateTime,
+        is_deleted isDeleted
+    </sql>
+
+    <!-- 根据 id 获取所属的分类列表 -->
+    <select id="selectCategoryList" resultMap="sysCategoryMap">
+        select
+            <include refid="columns"></include>
+        from
+            category
+        where
+            parent_id = #{id}
+        and
+            is_deleted = 0
+        order by
+            id desc
+    </select>
+
+    <!-- 判断 该id 下是否还有子分类 -->
+    <select id="countCategoryById" resultType="int">
+        select
+            count(*)
+        from
+            category
+        where
+            parent_id = #{id}
+        and
+            is_deleted = 0
+    </select>
+</mapper>
