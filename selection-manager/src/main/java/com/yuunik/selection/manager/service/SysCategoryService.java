@@ -5,5 +5,7 @@ import com.yuunik.selection.model.entity.product.Category;
 import java.util.List;
 
 public interface SysCategoryService {
-    List<Category> getCategoryList(String id);
+    List<Category> getCategoryListForElementPlus(String id);
+
+    List<Category> getCategoryListForAntDesign();
 }

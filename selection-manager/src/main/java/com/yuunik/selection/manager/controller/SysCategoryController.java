@@ -21,10 +21,17 @@ public class SysCategoryController {
     @Autowired
     private SysCategoryService sysCategoryService;
 
-    @Operation(summary = "获取分类列表")
-    @GetMapping("/getCategoryList/{id}")
-    public Result<List<Category>> getCategoryList(@PathVariable String id) {
-        List<Category> categoryList = sysCategoryService.getCategoryList(id);
+    @Operation(summary = "获取分类列表 (供 element-plus 组件库使用)")
+    @GetMapping("/getCategoryListForElementPlus/{id}")
+    public Result<List<Category>> getCategoryListForElementPlus(@PathVariable String id) {
+        List<Category> categoryList = sysCategoryService.getCategoryListForElementPlus(id);
+        return Result.build(categoryList, ResultCodeEnum.SUCCESS);
+    }
+
+    @Operation(summary = "获取分类列表 (供 ant design 组件库使用)")
+    @GetMapping("/getCategoryListForAntDesign")
+    public Result<List<Category>> getCategoryListForAntDesign() {
+        List<Category> categoryList = sysCategoryService.getCategoryListForAntDesign();
         return Result.build(categoryList, ResultCodeEnum.SUCCESS);
     }
 }
