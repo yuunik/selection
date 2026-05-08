@@ -56,7 +56,7 @@ public class SysUserServiceImpl implements SysUserService {
                 redisTemplate.delete("user:validate" + codeKey);
             } else {
                 // 验证码输入错误
-                throw new YuunikException(ResultCodeEnum.VALIDATECODE_ERROR);
+                throw new YuunikException(ResultCodeEnum.VALIDATE_CODE_ERROR);
             }
         }
         // 获取用户信息

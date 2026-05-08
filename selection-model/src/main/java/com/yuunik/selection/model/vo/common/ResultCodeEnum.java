@@ -7,7 +7,7 @@ public enum ResultCodeEnum {
 
     SUCCESS(200 , "操作成功") ,
     LOGIN_ERROR(201 , "用户名或者密码错误"),
-    VALIDATECODE_ERROR(202 , "验证码错误") ,
+    VALIDATE_CODE_ERROR(202 , "验证码错误") ,
     USER_NOT_EXISTS(203 , "用户不存在"),
     DATA_ERROR(204, "数据异常"),
     TOKEN_EXPIRED(205, "token失效"),
